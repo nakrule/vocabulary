@@ -45,7 +45,7 @@ func main() {
 }
 
 // Create a table to enter words and definitions
-func createWordTableContainer() widgets.QWidget_ITF {
+func createWordTableContainer() *widgets.QTableWidget {
 
 	rowsNumber := 5
 	columnsNumber := 2
@@ -54,6 +54,8 @@ func createWordTableContainer() widgets.QWidget_ITF {
 	table.SetRowCount(rowsNumber)
 	table.SetColumnCount(columnsNumber)
 	table.SetAlternatingRowColors(true)
+	table.SetShowGrid(false)
+	table.SetCornerButtonEnabled(false) // Disable the top left corner button to select all cells
 
 	headers := []string{"Terms", "Definitions"}
 	table.SetHorizontalHeaderLabels(headers)
