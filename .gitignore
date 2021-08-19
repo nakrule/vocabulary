@@ -13,3 +13,9 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# qtbox ressources files
+qtbox
+
+# MacOS DS_Store
+*.DS_Store
