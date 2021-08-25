@@ -9,6 +9,11 @@ import (
 
 const buttonWidth = 130 // Some buttons have a fixed width
 
+type TableItem struct {
+	term       string
+	definition string
+}
+
 func main() {
 
 	// needs to be called once before you can start using the QWidgets
@@ -31,17 +36,23 @@ func main() {
 	mainVbox.SetLayout(widgets.NewQVBoxLayout())
 	window.SetCentralWidget(mainVbox)
 
+	table := createWordTableContainer()
 	mainVbox.Layout().AddWidget(createLearnButton())
-	mainVbox.Layout().AddWidget(createWordTableContainer())
+	mainVbox.Layout().AddWidget(table)
 	mainVbox.Layout().AddWidget(createBottomButtons())
 
 	// make the window visible
 	window.Show()
+	table.InsertRow(table.RowCount())
 
 	// start the main Qt event loop
 	// and block until app.Exit() is called
 	// or the window is closed by the user
 	app.Exec()
+	table.InsertRow(table.RowCount())
+	table.InsertRow(table.RowCount())
+	mainVbox.Update()
+	table.Repaint()
 }
 
 // Create a table to enter words and definitions
