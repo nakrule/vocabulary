@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/therecipe/qt/core"
@@ -9,7 +10,7 @@ import (
 
 const buttonWidth = 130 // Some buttons have a fixed width
 
-//var table *widgets.QTableWidget
+var table *widgets.QTableWidget
 
 func main() {
 
@@ -18,10 +19,9 @@ func main() {
 	app.SetApplicationName("Vocabulary")
 
 	// create a window
-	// with a minimum size of 250*200
-	// and sets the title to "Hello Widgets Example"
+	// with a minimum size of 450*800
 	window := widgets.NewQMainWindow(nil, 0)
-	window.SetMinimumSize2(450, 400)
+	window.SetMinimumSize2(450, 800)
 	window.SetWindowTitle("Vocabulary")
 
 	menuBar()
@@ -33,27 +33,16 @@ func main() {
 	mainVbox.SetLayout(widgets.NewQVBoxLayout())
 	window.SetCentralWidget(mainVbox)
 
-	table := createWordTableContainer()
+	table = createWordTableContainer()
 	mainVbox.Layout().AddWidget(createLearnButton())
 	mainVbox.Layout().AddWidget(table)
 	mainVbox.Layout().AddWidget(createBottomButtons())
-	button := widgets.NewQPushButton2("test", nil)
-	button.SetFixedWidth(buttonWidth)
-
-	button.ConnectClicked(func(bool) {
-		addRow(table)
-	})
-
-	mainVbox.Layout().AddWidget(button)
 
 	// Set text in row 0, column 0
 	table.SetItem(0, 0, widgets.NewQTableWidgetItem2("hello", 0))
 
 	// make the window visible
 	window.Show()
-
-	table.InsertRow(table.RowCount())
-	addRow(table)
 
 	// start the main Qt event loop
 	// and block until app.Exit() is called
@@ -72,7 +61,8 @@ func createWordTableContainer() *widgets.QTableWidget {
 	table.SetColumnCount(columnsNumber)
 	table.SetAlternatingRowColors(true)
 	table.SetShowGrid(false)
-	table.SetCornerButtonEnabled(false) // Disable the top left corner button to select all cells
+	table.SetSelectionBehavior(widgets.QAbstractItemView__SelectRows) // Click a cell select the whole row
+	table.SetCornerButtonEnabled(false)                               // Disable the top left corner button to select all cells
 
 	headers := []string{"Terms", "Definitions"}
 	table.SetHorizontalHeaderLabels(headers)
@@ -107,6 +97,18 @@ func createBottomButtons() *widgets.QWidget {
 	deleteButton.SetFixedWidth(buttonWidth)
 	newRowButton.SetFixedWidth(buttonWidth)
 
+	newRowButton.ConnectClicked(func(bool) {
+		table.InsertRow(table.RowCount())
+	})
+	deleteButton.ConnectClicked(func(bool) {
+		//println(table.SelectedItems()[0].Text())
+		model := table.SelectionModel()
+		if model.HasSelection() {
+			t := model.CurrentIndex()
+			fmt.Println(t.Row())
+		}
+	})
+
 	hbox.Layout().AddWidget(deleteButton)
 	hbox.Layout().AddWidget(newRowButton)
 	hbox.Layout().SetAlignment(newRowButton, core.Qt__AlignRight) // Align the button on the right side
@@ -130,8 +132,4 @@ func menuBar() {
 	editMenu := menuBar.AddMenu2("Edit")
 	editMenu.AddAction("Undo")
 	editMenu.AddAction("Redo")
-}
-
-func addRow(t *widgets.QTableWidget) {
-	t.InsertRow(t.RowCount())
 }
