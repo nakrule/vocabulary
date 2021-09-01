@@ -9,10 +9,7 @@ import (
 
 const buttonWidth = 130 // Some buttons have a fixed width
 
-type TableItem struct {
-	term       string
-	definition string
-}
+//var table *widgets.QTableWidget
 
 func main() {
 
@@ -24,7 +21,7 @@ func main() {
 	// with a minimum size of 250*200
 	// and sets the title to "Hello Widgets Example"
 	window := widgets.NewQMainWindow(nil, 0)
-	window.SetMinimumSize2(250, 200)
+	window.SetMinimumSize2(450, 400)
 	window.SetWindowTitle("Vocabulary")
 
 	menuBar()
@@ -40,19 +37,28 @@ func main() {
 	mainVbox.Layout().AddWidget(createLearnButton())
 	mainVbox.Layout().AddWidget(table)
 	mainVbox.Layout().AddWidget(createBottomButtons())
+	button := widgets.NewQPushButton2("test", nil)
+	button.SetFixedWidth(buttonWidth)
+
+	button.ConnectClicked(func(bool) {
+		addRow(table)
+	})
+
+	mainVbox.Layout().AddWidget(button)
+
+	// Set text in row 0, column 0
+	table.SetItem(0, 0, widgets.NewQTableWidgetItem2("hello", 0))
 
 	// make the window visible
 	window.Show()
+
 	table.InsertRow(table.RowCount())
+	addRow(table)
 
 	// start the main Qt event loop
 	// and block until app.Exit() is called
 	// or the window is closed by the user
 	app.Exec()
-	table.InsertRow(table.RowCount())
-	table.InsertRow(table.RowCount())
-	mainVbox.Update()
-	table.Repaint()
 }
 
 // Create a table to enter words and definitions
@@ -124,4 +130,8 @@ func menuBar() {
 	editMenu := menuBar.AddMenu2("Edit")
 	editMenu.AddAction("Undo")
 	editMenu.AddAction("Redo")
+}
+
+func addRow(t *widgets.QTableWidget) {
+	t.InsertRow(t.RowCount())
 }
