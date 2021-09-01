@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/therecipe/qt/core"
@@ -101,11 +100,16 @@ func createBottomButtons() *widgets.QWidget {
 		table.InsertRow(table.RowCount())
 	})
 	deleteButton.ConnectClicked(func(bool) {
-		//println(table.SelectedItems()[0].Text())
 		model := table.SelectionModel()
 		if model.HasSelection() {
-			t := model.CurrentIndex()
-			fmt.Println(t.Row())
+			rowIndex := model.CurrentIndex().Row()
+			table.RemoveRow(rowIndex)
+			// select next row after deleting the old one
+			if rowIndex > 0 {
+				table.SelectRow(rowIndex - 1)
+			} else {
+				table.SelectRow(0)
+			}
 		}
 	})
 
