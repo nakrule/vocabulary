@@ -17,28 +17,7 @@ func main() {
 	app := widgets.NewQApplication(len(os.Args), os.Args)
 	app.SetApplicationName("Vocabulary")
 
-	// create a window
-	// with a minimum size of 450*800
-	window := widgets.NewQMainWindow(nil, 0)
-	window.SetMinimumSize2(450, 800)
-	window.SetWindowTitle("Vocabulary")
-
-	menuBar()
-
-	// create a regular widget
-	// give it a QVBoxLayout
-	// and make it the central widget of the window
-	mainVbox := widgets.NewQWidget(nil, 0)
-	mainVbox.SetLayout(widgets.NewQVBoxLayout())
-	window.SetCentralWidget(mainVbox)
-
-	table = createWordTableContainer()
-	mainVbox.Layout().AddWidget(createLearnButton())
-	mainVbox.Layout().AddWidget(table)
-	mainVbox.Layout().AddWidget(createBottomButtons())
-
-	// Set text in row 0, column 0
-	table.SetItem(0, 0, widgets.NewQTableWidgetItem2("hello", 0))
+	window := setupUi()
 
 	// make the window visible
 	window.Show()
@@ -52,7 +31,7 @@ func main() {
 // Create a table to enter words and definitions
 func createWordTableContainer() *widgets.QTableWidget {
 
-	rowsNumber := 5
+	rowsNumber := 10
 	columnsNumber := 2
 
 	table := widgets.NewQTableWidget(nil)
@@ -136,4 +115,28 @@ func menuBar() {
 	editMenu := menuBar.AddMenu2("Edit")
 	editMenu.AddAction("Undo")
 	editMenu.AddAction("Redo")
+}
+
+func setupUi() *widgets.QMainWindow {
+
+	// create a window
+	window := widgets.NewQMainWindow(nil, 0)
+	window.SetBaseSize2(450, 500)
+	window.SetWindowTitle("Vocabulary")
+
+	menuBar()
+
+	// create a regular widget
+	// give it a QVBoxLayout
+	// and make it the central widget of the window
+	mainVbox := widgets.NewQWidget(nil, 0)
+	mainVbox.SetLayout(widgets.NewQVBoxLayout())
+	window.SetCentralWidget(mainVbox)
+
+	table = createWordTableContainer()
+	mainVbox.Layout().AddWidget(createLearnButton())
+	mainVbox.Layout().AddWidget(table)
+	mainVbox.Layout().AddWidget(createBottomButtons())
+
+	return window
 }
