@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/therecipe/qt/core"
@@ -21,6 +22,8 @@ func main() {
 
 	// make the window visible
 	window.Show()
+
+	openFile()
 
 	// start the main Qt event loop
 	// and block until app.Exit() is called
@@ -121,7 +124,8 @@ func setupUi() *widgets.QMainWindow {
 
 	// create a window
 	window := widgets.NewQMainWindow(nil, 0)
-	window.SetBaseSize2(450, 500)
+	//window.SetBaseSize2(450, 500)
+	window.Resize2(450, 500)
 	window.SetWindowTitle("Vocabulary")
 
 	menuBar()
@@ -139,4 +143,27 @@ func setupUi() *widgets.QMainWindow {
 	mainVbox.Layout().AddWidget(createBottomButtons())
 
 	return window
+}
+
+func saveFile() {
+
+	dialog := widgets.NewQFileDialog2(nil, "Save file", "~/Downloads/", "*")
+	dialog.Exec()
+
+}
+
+func saveFileAs() {
+
+	dialog := widgets.NewQFileDialog2(nil, "Save file", "~/Downloads/", "*")
+	dialog.Exec()
+
+}
+
+// Return the selected filename from the user.
+func openFile() string {
+
+	path := widgets.QFileDialog_GetOpenFileName(nil, "Open CSV", "", "(*.csv)", "", widgets.QFileDialog__DontUseNativeDialog)
+	fmt.Printf("path: %v\n", path)
+	return path
+
 }
